@@ -1,0 +1,68 @@
+# Local / production orchestration for the aimicroapp monorepo.
+#
+# Usage:
+#   docker compose up --build         # build + run web + server
+#   docker compose up -d              # detach
+#   docker compose down               # stop & remove
+#
+# State (LanceDB / NeDB / cached PDFs / slidev / screenshots) survives
+# rebuilds via the `server-data` named volume.
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    image: aimicroapp-server:latest
+    container_name: aimicroapp-server
+    restart: unless-stopped
+    environment:
+      PORT: 8787
+      HOST: 0.0.0.0
+      DATA_DIR: /app/apps/server/.data
+      LANCEDB_PATH: /app/apps/server/.data/lancedb
+      # Provider keys can be supplied here OR via the in-app Settings UI
+      # (which writes to .data/settings.json and takes precedence).
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY:-}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+      DASHSCOPE_API_KEY: ${DASHSCOPE_API_KEY:-}
+      DASHSCOPE_BASE_URL: ${DASHSCOPE_BASE_URL:-https://dashscope.aliyuncs.com/compatible-mode/v1}
+      QWEN_EMBED_MODEL: ${QWEN_EMBED_MODEL:-text-embedding-v3}
+      MAX_PDF_MB: ${MAX_PDF_MB:-50}
+      FETCH_TIMEOUT_MS: ${FETCH_TIMEOUT_MS:-30000}
+    volumes:
+      - server-data:/app/apps/server/.data
+    # Chrome inside the container needs a larger /dev/shm to render
+    # complex Slidev pages without crashing.
+    shm_size: "1gb"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1:8787/healthz"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    networks:
+      - app-net
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    image: aimicroapp-web:latest
+    container_name: aimicroapp-web
+    restart: unless-stopped
+    depends_on:
+      server:
+        condition: service_healthy
+    ports:
+      - "${WEB_PORT:-8080}:80"
+    networks:
+      - app-net
+
+volumes:
+  server-data:
+
+networks:
+  app-net:
+    driver: bridge

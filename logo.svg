@@ -1,0 +1,128 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Background Gradients -->
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#09090B" />
+      <stop offset="100%" stop-color="#18181B" />
+    </linearGradient>
+    <linearGradient id="appBorder" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#EC4899" stop-opacity="0.1" />
+    </linearGradient>
+
+    <!-- Document Gradients (Minimalist) -->
+    <linearGradient id="docBase" x1="64" y1="40" x2="192" y2="216" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F8FAFC" />
+    </linearGradient>
+    <linearGradient id="glassBorder" x1="64" y1="40" x2="192" y2="216" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="1" />
+      <stop offset="100%" stop-color="#E2E8F0" stop-opacity="0.8" />
+    </linearGradient>
+    <linearGradient id="docFold" x1="136" y1="40" x2="192" y2="88" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F1F5F9" />
+      <stop offset="100%" stop-color="#E2E8F0" />
+    </linearGradient>
+
+    <!-- Slide Gradients (Minimalist Accent) -->
+    <linearGradient id="slideGrad" x1="96" y1="112" x2="160" y2="152" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="100%" stop-color="#4F46E5" />
+    </linearGradient>
+    <linearGradient id="slideBorder" x1="96" y1="112" x2="160" y2="152" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A5B4FC" stop-opacity="0.8" />
+      <stop offset="100%" stop-color="#818CF8" stop-opacity="0.3" />
+    </linearGradient>
+
+    <!-- Sparkle Gradients -->
+    <linearGradient id="sparkle1" x1="168" y1="20" x2="216" y2="68" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8" />
+      <stop offset="100%" stop-color="#FDF4FF" />
+    </linearGradient>
+    <linearGradient id="sparkle2" x1="34" y1="162" x2="70" y2="198" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F472B6" />
+      <stop offset="100%" stop-color="#FDF4FF" />
+    </linearGradient>
+    <linearGradient id="sparkle3" x1="174" y1="188" x2="198" y2="212" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#A78BFA" />
+      <stop offset="100%" stop-color="#FDF4FF" />
+    </linearGradient>
+
+    <!-- Filters -->
+    <filter id="softShadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#000" flood-opacity="0.7"/>
+    </filter>
+    <filter id="neonGlow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+    <filter id="glowSubtle" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="4" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <!-- App Icon Base -->
+  <rect width="254" height="254" x="1" y="1" rx="60" fill="url(#bgGrad)" stroke="url(#appBorder)" stroke-width="2" />
+  
+  <!-- Background Ambient Glow -->
+  <ellipse cx="128" cy="128" rx="80" ry="90" fill="#6366F1" opacity="0.4" filter="url(#neonGlow)" />
+
+  <!-- Tech/AI Circles Background -->
+  <circle cx="128" cy="128" r="90" fill="none" stroke="#818CF8" stroke-width="1" stroke-dasharray="4 8" opacity="0.3" />
+  <circle cx="128" cy="128" r="110" fill="none" stroke="#F472B6" stroke-width="1" stroke-dasharray="2 6" opacity="0.2" />
+
+  <!-- Main Document (Minimalist Redesign) -->
+  <g filter="url(#softShadow)">
+    <!-- Document Base: Clean white -->
+    <path d="M72 48 C72 42.48 76.48 38 82 38 H138.34 C141 38 143.55 39.05 145.43 40.93 L181.07 76.57 C182.95 78.45 184 81 184 83.66 V206 C184 211.52 179.52 216 174 216 H82 C76.48 216 72 211.52 72 206 V48 Z" fill="url(#docBase)" />
+    <!-- Clean Border -->
+    <path d="M72 48 C72 42.48 76.48 38 82 38 H138.34 C141 38 143.55 39.05 145.43 40.93 L181.07 76.57 C182.95 78.45 184 81 184 83.66 V206 C184 211.52 179.52 216 174 216 H82 C76.48 216 72 211.52 72 206 V48 Z" fill="none" stroke="url(#glassBorder)" stroke-width="1.5" />
+    
+    <!-- Document Fold -->
+    <path d="M138 38 V74 C138 79.52 142.48 84 148 84 H184 L138 38 Z" fill="url(#docFold)" />
+    
+    <!-- Minimalist Content Blocks -->
+    <!-- Title Block -->
+    <rect x="96" y="88" width="48" height="6" rx="3" fill="#CBD5E1" />
+    
+    <!-- Abstract Media/Slide Block -->
+    <rect x="96" y="112" width="64" height="40" rx="6" fill="url(#slideGrad)" />
+    <rect x="96" y="112" width="64" height="40" rx="6" fill="none" stroke="url(#slideBorder)" stroke-width="1" />
+    
+    <!-- Inner Media Details -->
+    <rect x="104" y="122" width="24" height="4" rx="2" fill="#FFFFFF" fill-opacity="0.9" />
+    <rect x="104" y="132" width="16" height="4" rx="2" fill="#FFFFFF" fill-opacity="0.7" />
+    <circle cx="144" cy="132" r="8" fill="#FFFFFF" fill-opacity="0.9" />
+    
+    <!-- Text Lines -->
+    <rect x="96" y="168" width="64" height="6" rx="3" fill="#E2E8F0" />
+    <rect x="96" y="184" width="40" height="6" rx="3" fill="#E2E8F0" />
+  </g>
+
+  <!-- AI Magic Sparkles -->
+  <!-- Sparkle 1 (Top Right) -->
+  <g filter="url(#glowSubtle)">
+    <path d="M192 20 L198 38 L216 44 L198 50 L192 68 L186 50 L168 44 L186 38 Z" fill="url(#sparkle1)" />
+    <path d="M192 30 L196 40 L206 44 L196 48 L192 58 L188 48 L178 44 L188 40 Z" fill="#FFFFFF" />
+  </g>
+  
+  <!-- Sparkle 2 (Bottom Left) -->
+  <g filter="url(#glowSubtle)">
+    <path d="M52 162 L57 175 L70 180 L57 185 L52 198 L47 185 L34 180 L47 175 Z" fill="url(#sparkle2)" />
+    <path d="M52 170 L55 177 L62 180 L55 183 L52 190 L49 183 L42 180 L49 177 Z" fill="#FFFFFF" />
+  </g>
+
+  <!-- Sparkle 3 (Bottom Right) -->
+  <g filter="url(#glowSubtle)">
+    <path d="M186 188 L189 197 L198 200 L189 203 L186 212 L183 203 L174 200 L183 197 Z" fill="url(#sparkle3)" />
+    <path d="M186 193 L188 198 L193 200 L188 202 L186 207 L184 202 L179 200 L184 198 Z" fill="#FFFFFF" />
+  </g>
+
+</svg>

@@ -1,0 +1,31 @@
+# Keep the build context small. Paths below are relative to the monorepo
+# root (we build with `-f apps/web/Dockerfile .`).
+
+**/node_modules
+**/dist
+**/build
+**/.cache
+**/.turbo
+**/coverage
+**/.data
+**/.puppeteer-cache
+**/.git
+**/.github
+**/.vscode
+**/.idea
+**/.DS_Store
+
+**/.env
+**/.env.*
+!**/.env.example
+
+# Other workspace apps never go inside the web image.
+apps/server
+
+# Top-level ignore — docs / planning, never needed at build time.
+.plan
+.qoder
+.debug-analysis
+.question
+README.md
+*.log

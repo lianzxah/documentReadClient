@@ -1,0 +1,26 @@
+{
+  "name": "document-reader",
+  "version": "0.1.0",
+  "private": true,
+  "author": {
+    "name": "lianzxah",
+    "email": "18834161127@163.com",
+    "url": "https://github.com/lianzxah"
+  },
+  "license": "MIT",
+  "packageManager": "pnpm@9.0.0",
+  "scripts": {
+    "dev:all": "pnpm -r --parallel --filter \"./apps/*\" dev",
+    "dev": "pnpm -r --parallel --filter '!@app/electron' dev",
+    "dev:web": "pnpm --filter @app/web dev",
+    "dev:server": "pnpm --filter @app/server dev",
+    "dev:electron": "pnpm --filter @app/web build && pnpm --filter @app/electron dev",
+    "build": "pnpm -r --filter \"./apps/*\" build",
+    "build:electron": "pnpm --filter @app/server build && pnpm --filter @app/web build && pnpm --filter @app/electron build",
+    "build:electron:win": "pnpm --filter @app/server build && pnpm --filter @app/web build && pnpm --filter @app/electron build:win",
+    "start": "pnpm --filter @app/server start"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5"
+  }
+}

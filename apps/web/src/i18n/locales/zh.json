@@ -1,0 +1,384 @@
+{
+  "languages": {
+    "en": "English",
+    "zh": "中文",
+    "switcher": "语言"
+  },
+  "common": {
+    "save": "保存",
+    "cancel": "取消",
+    "close": "关闭",
+    "edit": "编辑",
+    "delete": "删除",
+    "create": "创建",
+    "retry": "重试",
+    "copy": "复制",
+    "refresh": "刷新",
+    "download": "下载",
+    "loading": "加载中...",
+    "savingDots": "保存中...",
+    "ingestingDots": "解析中...",
+    "errorWithMessage": "错误：{{message}}",
+    "relative": {
+      "secondsAgo": "{{count}} 秒前",
+      "minutesAgo": "{{count}} 分钟前",
+      "hoursAgo": "{{count}} 小时前",
+      "daysAgo": "{{count}} 天前"
+    }
+  },
+  "layout": {
+    "tabBar": {
+      "downloadPdf": "下载 PDF",
+      "downloadEnabled": "下载当前正在阅读的 PDF",
+      "downloadDisabled": "打开文档后即可下载"
+    },
+    "activityBar": {
+      "documents": "文档",
+      "outline": "目录",
+      "chat": "对话",
+      "translate": "翻译",
+      "ppt": "PPT"
+    },
+    "sideBar": {
+      "openByUrlTooltip": "打开 PDF（Ctrl+T）",
+      "noDocsLine1": "暂无文档。点击",
+      "noDocsLine2": "图标，或按 Ctrl+T 打开本地 PDF 或使用 URL。",
+      "open": "打开",
+      "recent": "最近",
+      "sourceLocal": "本地",
+      "sourceUrl": "链接",
+      "deleteDoc": "删除",
+      "openDocTooltip": "打开文档",
+      "outlineNoDoc": "打开 PDF 查看目录。",
+      "outlineEmpty": "该文档没有目录。",
+      "chatTitle": "对话",
+      "chatPlaceholder": "对话面板已停靠在底部。按 Ctrl+J 切换显示，或在对话头部点击停靠按钮将其移回侧边栏。",
+      "translateTitle": "翻译",
+      "translatePlaceholder": "在 PDF 中选中文本即可翻译。可通过工具栏在中英之间切换。",
+      "deleteConfirm": "确定要删除「{{title}}」及其所有会话、幻灯片与覆盖配置吗？此操作不可撤销。"
+    },
+    "editorArea": {
+      "openByUrl": "打开 PDF",
+      "orPressShortcut": "或按 Ctrl+T"
+    },
+    "statusBar": {
+      "appName": "文档阅读器",
+      "noDocOpen": "未打开任何文档",
+      "pageOf": "第 {{current}} / {{total}} 页",
+      "shortcuts": "Ctrl+T 打开  |  Ctrl+W 关闭  |  Ctrl+J 切换底栏"
+    }
+  },
+  "reader": {
+    "openUrl": {
+      "title": "通过 URL 打开 PDF",
+      "placeholder": "https://example.com/paper.pdf",
+      "samplesLabel": "示例 PDF：",
+      "open": "打开"
+    },
+    "openDoc": {
+      "title": "打开 PDF",
+      "tabs": {
+        "browse": "浏览服务器",
+        "local": "上传文件",
+        "url": "通过 URL"
+      },
+      "browse": {
+        "roots": "快速访问",
+        "clickToEdit": "点击输入路径",
+        "goUp": "返回上一级目录",
+        "empty": "该目录下没有 PDF 文件。",
+        "selectHint": "选择要打开的 PDF 文件",
+        "open": "打开",
+        "permDenied": "无访问权限"
+      },
+      "local": {
+        "dropHint": "将 PDF 拖入此处，或点击选择文件",
+        "choose": "选择 PDF...",
+        "chooseAnother": "选择其他文件",
+        "tooLarge": "文件过大：{{size}}（上限 {{max}}）",
+        "uploading": "上传中 {{percent}}%",
+        "uploaded": "已上传 {{size}}",
+        "open": "打开",
+        "hint": "上限 {{max}}。文件会缓存到服务端，随后可手动为其建立对话索引。"
+      },
+      "index": {
+        "start": "为对话建立索引",
+        "running": "索引中... {{percent}}%",
+        "notIndexed": "未索引",
+        "indexed": "已索引",
+        "failed": "索引失败"
+      }
+    },
+    "viewer": {
+      "loading": "正在加载 PDF...",
+      "loadError": "PDF 加载失败，文档可能尚未缓存。"
+    }
+  },
+  "translate": {
+    "auto": "自动",
+    "zh2en": "中 → 英",
+    "en2zh": "英 → 中",
+    "detected": "（已识别：{{lang}}）",
+    "translating": "翻译中...",
+    "swap": "切换方向",
+    "copy": "复制",
+    "close": "关闭"
+  },
+  "chat": {
+    "header": {
+      "title": "对话",
+      "moveToBottom": "将对话移至底部面板",
+      "dockToSide": "将对话停靠到侧边栏",
+      "clearSession": "清空当前会话",
+      "preparingSession": "正在准备会话..."
+    },
+    "empty": {
+      "openPdfFirst": "请先打开一份 PDF，然后开始对话。",
+      "ready": "向当前文档提问，回答会基于检索到的段落生成，并附带页码引用。"
+    },
+    "composer": {
+      "placeholder": "针对当前文档提问…（Enter 发送，Shift+Enter 换行）",
+      "send": "发送",
+      "stop": "停止",
+      "thinking": "思考中..."
+    },
+    "messages": {
+      "sources": "引用来源",
+      "jumpToPage": "跳转至第 {{page}} 页",
+      "pageBadge": "第{{page}}页",
+      "answeredWithSkill": "由技能回答：{{name}}",
+      "errorPrefix": "[错误：{{message}}]"
+    },
+    "choice": {
+      "other": "其他（自由输入）",
+      "otherPlaceholder": "输入你的回答...",
+      "submit": "回答所有问题",
+      "submitted": "已回答"
+    },
+    "sessions": {
+      "title": "会话",
+      "count": "会话（{{count}}）",
+      "newSession": "新建会话",
+      "rename": "重命名",
+      "delete": "删除",
+      "empty": "暂无会话——开始输入即可创建。",
+      "deleteConfirm": "确定要删除该会话吗？此操作不可撤销。",
+      "skillBadge": "技能：{{name}}"
+    },
+    "skill": {
+      "label": "技能",
+      "useSession": "使用会话默认技能",
+      "overrideHeading": "本次回复临时使用",
+      "sessionHeading": "本会话默认技能",
+      "builtinSection": "内置",
+      "customSection": "自定义",
+      "customFallback": "自定义技能",
+      "nextReply": "下一次回复：",
+      "clearOverride": "清除",
+      "primary": "主技能",
+      "auxiliary": "辅助技能",
+      "auxiliaryCount": "+{{count}}"
+    },
+    "toolCall": {
+      "calling": "正在调用工具...",
+      "completed": "工具调用完成",
+      "expandResult": "展开结果"
+    }
+  },
+  "chatModel": {
+    "headerTitle": "本文档使用的对话模型",
+    "useGlobal": "使用全局模型（{{model}}）",
+    "noPresets": "暂无可选预设。",
+    "perDocOverride": "本文档独立模型：{{model}}",
+    "usingGlobal": "正在使用全局模型：{{model}}",
+    "globalUnset": "（未设置）",
+    "noModel": "（未配置模型）"
+  },
+  "settings": {
+    "title": "设置 — 模型",
+    "tabs": {
+      "chat": {
+        "label": "对话模型",
+        "description": "用于生成摘要、回答、翻译以及幻灯片。"
+      },
+      "embedding": {
+        "label": "向量模型",
+        "description": "为文档 RAG 检索索引生成向量嵌入。"
+      },
+      "skills": {
+        "label": "对话技能",
+        "description": "应用于对话会话的人设和回复风格。"
+      },
+      "mcp": {
+        "label": "MCP 服务",
+        "description": "配置与管理 MCP (Model Context Protocol) 工具服务器。"
+      }
+    },
+    "fields": {
+      "baseURL": "Base URL",
+      "apiKey": "API 密钥",
+      "model": "模型"
+    },
+    "presets": {
+      "header": "可用预设"
+    },
+    "apiKey": {
+      "notSet": "（未设置）",
+      "edit": "编辑",
+      "editTooltip": "编辑 API 密钥",
+      "cancelEdit": "取消编辑",
+      "placeholderKeep": "留空表示保留现有密钥",
+      "placeholderNew": "sk-..."
+    },
+    "actions": {
+      "test": "测试"
+    },
+    "feedback": {
+      "noChanges": "没有需要保存的修改。",
+      "saved": "已保存。",
+      "saveFailed": "保存失败。",
+      "connectionOk": "连接成功（{{ms}} 毫秒）。",
+     "connectionFailed": "连接失败。"
+    }
+  },
+  "mcp": {
+    "title": "MCP 服务器",
+    "addServer": "添加服务器",
+    "noServers": "暂无 MCP 服务器。点击『添加服务器』开始配置。",
+    "fields": {
+      "name": "名称",
+      "namePlaceholder": "例如：文件系统工具",
+      "transport": "连接方式",
+      "command": "命令",
+      "commandPlaceholder": "例如：npx",
+      "args": "参数",
+      "argsPlaceholder": "每行一个参数",
+      "url": "服务地址",
+      "urlPlaceholder": "http://localhost:3001/sse",
+      "env": "环境变量",
+      "envPlaceholder": "KEY=VALUE（每行一个）",
+      "envHint": "传递给 MCP 服务器进程的环境变量。",
+      "envAdd": "添加变量",
+      "argsHint": "参数以空格分隔。",
+      "enabled": "启用"
+    },
+    "status": {
+      "connected": "已连接",
+      "disconnected": "未连接",
+      "toolCount": "{{count}} 个工具",
+      "error": "错误：{{message}}"
+    },
+    "actions": {
+      "test": "测试连接",
+      "testing": "测试中...",
+      "delete": "删除",
+      "deleteConfirm": "确定要删除 MCP 服务器「{{name}}」吗？"
+    },
+    "feedback": {
+      "created": "MCP 服务器已添加。",
+      "updated": "MCP 服务器已更新。",
+      "deleted": "MCP 服务器已删除。",
+      "testOk": "连接成功（{{ms}} 毫秒），发现 {{count}} 个工具。",
+      "testFailed": "连接失败。"
+    }
+  },
+  "skills": {
+    "headerCustom": "自定义",
+    "headerBuiltin": "内置",
+    "newCustom": "新建自定义技能",
+    "emptyCustom": "暂无自定义技能。点击 + 创建一个。",
+    "selectHint": "在左侧选择一个技能，或点击 + 创建你自己的。",
+    "builtinReadOnly": "内置技能的提示词不可编辑。如需自定义，请新建一个自定义技能。",
+    "noDescription": "（无描述）",
+    "fields": {
+      "name": "名称",
+      "namePlaceholder": "例如：领域专属导师",
+      "description": "描述",
+      "descriptionPlaceholder": "在技能选择器中显示的简短说明",
+      "systemPrompt": "系统提示词",
+      "systemPromptPlaceholder": "ROLE: ...\n\nOUTPUT FORMAT: ...",
+      "systemPromptHint": "基础 RAG 指令（引用、检索基础、Markdown 格式化）会自动应用。该提示词用于定义角色、输出格式和风格。",
+      "temperatureShort": "温度",
+      "topKShort": "topK",
+      "maxTokensShort": "maxTokens",
+      "temperature": "温度（0-2）",
+      "topK": "topK（1-30）",
+      "maxTokens": "maxTokens（50-8000）"
+    },
+    "create": "新建自定义技能",
+    "editing": "编辑技能",
+    "creating": "新建自定义技能",
+    "feedback": {
+      "validation": "名称和系统提示词必填。",
+      "created": "技能已创建。",
+      "updated": "技能已更新。",
+      "deleted": "技能已删除。",
+      "saveFailed": "保存失败。",
+      "deleteFailed": "删除失败。"
+    },
+    "import": {
+      "button": "导入技能包（.zip）",
+      "busy": "正在分析技能包…",
+      "success": "已从「{{name}}」导入草稿，请审阅并点击创建保存。",
+      "failed": "导入失败。",
+      "invalidFile": "请选择 .zip 格式的技能包。"
+    },
+    "deleteConfirm": "确定要删除技能「{{name}}」吗？"
+  },
+  "slidev": {
+    "panel": {
+      "title": "PPT 生成器",
+      "openDocFirst": "打开文档后即可生成幻灯片",
+      "intro": "基于当前文档使用 AI 生成演示文稿。",
+      "generate": "生成 PPT",
+      "regenerate": "重新生成",
+      "regenerateConfirmDirty": "重新生成将丢弃尚未保存的编辑。是否继续？",
+      "regenerateConfirm": "重新生成将覆盖当前幻灯片。是否继续？",
+      "edit": "编辑",
+      "exitEdit": "退出编辑",
+      "present": "演示",
+      "download": "下载",
+      "statusFallback": "正在生成幻灯片...",
+      "slideCount_one": "共 {{count}} 张幻灯片",
+      "slideCount_other": "共 {{count}} 张幻灯片"
+    },
+    "editor": {
+      "saving": "保存中...",
+      "saveFailed": "保存失败：{{error}}",
+      "editing": "编辑中...",
+      "savedAt": "已于{{relative}}保存",
+      "saveTooltip": "保存（Ctrl+S）",
+      "save": "保存",
+      "showPdf": "显示 PDF",
+      "hidePdf": "隐藏 PDF",
+      "showPdfTooltip": "显示 PDF 面板",
+      "hidePdfTooltip": "隐藏 PDF 面板",
+      "exitEdit": "退出编辑",
+      "exitEditTooltip": "退出编辑模式（自动保存待存修改）",
+      "editingTab": "编辑中：{{title}}",
+      "untitled": "Slidev",
+      "justNow": "刚刚"
+    },
+    "preview": {
+      "counter": "{{current}} / {{total}}",
+      "prev": "上一张",
+      "next": "下一张"
+    },
+    "presenter": {
+      "exit": "退出（ESC）",
+      "counter": "{{current}} / {{total}}"
+    },
+    "bytemd": {
+      "captureToolbar": "截屏、裁剪并插入为图片",
+      "selectInPdf": "在 PDF 面板中拖动以选择区域。按 Esc 取消。",
+      "waitingPermission": "正在等待屏幕捕获权限…",
+      "captureFailed": "截屏失败",
+      "pdfPaneNotVisible": "PDF 面板当前不可见。请在编辑器顶部工具栏中打开 PDF 面板后重试，或在截屏后使用裁剪对话框。",
+      "selectionTooSmall": "选区过小，请拖出更大的矩形。",
+      "fallbackTargetMissing": "未找到备用截屏目标。请确认 PDF 面板可见后重试。",
+      "cropTitle": "裁剪截图",
+      "cropHint": "在图片上拖动以选择区域，然后点击插入。若未选择，将插入完整画面。",
+      "insert": "插入"
+    }
+  }
+}

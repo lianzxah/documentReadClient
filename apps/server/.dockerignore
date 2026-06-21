@@ -1,0 +1,33 @@
+# Build-context ignore list (relative to the monorepo root, since builds
+# run with `-f apps/server/Dockerfile .`).
+
+**/node_modules
+**/dist
+**/build
+**/.cache
+**/.turbo
+**/coverage
+**/.git
+**/.github
+**/.vscode
+**/.idea
+**/.DS_Store
+
+# Local runtime state — must NOT be baked into the image, mount as a volume.
+apps/server/.data
+apps/server/.puppeteer-cache
+
+**/.env
+**/.env.*
+!**/.env.example
+
+# Web app code is irrelevant for the server image.
+apps/web
+
+# Repo-level docs / planning.
+.plan
+.qoder
+.debug-analysis
+.question
+README.md
+*.log

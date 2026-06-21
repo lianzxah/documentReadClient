@@ -1,0 +1,45 @@
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="256" y2="256" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0F172A" />
+      <stop offset="100%" stop-color="#1E1B4B" />
+    </linearGradient>
+    <linearGradient id="docGrad" x1="48" y1="48" x2="160" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3B82F6" />
+      <stop offset="100%" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="aiGrad" x1="120" y1="120" x2="200" y2="200" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C084FC" />
+      <stop offset="100%" stop-color="#9333EA" />
+    </linearGradient>
+    <linearGradient id="slideGrad" x1="88" y1="112" x2="168" y2="160" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F59E0B" />
+      <stop offset="100%" stop-color="#D97706" />
+    </linearGradient>
+    <filter id="shadow" x="-10" y="-10" width="276" height="276" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.5"/>
+    </filter>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="256" height="256" rx="56" fill="url(#bgGrad)" filter="url(#shadow)" />
+  
+  <!-- Outer Document Shape -->
+  <path d="M72 56C72 47.1634 79.1634 40 88 40H144.343C148.587 40 152.656 41.6857 155.657 44.6863L195.314 84.3431C198.314 87.3438 200 91.413 200 95.6569V200C200 208.837 192.837 216 184 216H88C79.1634 216 72 208.837 72 200V56Z" fill="url(#docGrad)" />
+  
+  <!-- Document Folded Corner -->
+  <path d="M144 40V72C144 80.8366 151.163 88 160 88H200L144 40Z" fill="#1D4ED8" />
+
+  <!-- Presentation Slide Element -->
+  <rect x="96" y="112" width="76" height="52" rx="6" fill="url(#slideGrad)" />
+  <!-- Slide inner contents (lines representing text and a chart/image) -->
+  <path d="M104 124H140" stroke="#FEF3C7" stroke-width="4" stroke-linecap="round" />
+  <path d="M104 136H132" stroke="#FEF3C7" stroke-width="4" stroke-linecap="round" />
+  <rect x="148" y="124" width="16" height="16" rx="2" fill="#FEF3C7" />
+  
+  <!-- AI Sparkles -->
+  <path d="M192 136L196.5 152L212 156.5L196.5 161L192 177L187.5 161L172 156.5L187.5 152L192 136Z" fill="url(#aiGrad)" />
+  <path d="M168 180L170.25 188L178 190.25L170.25 192.5L168 200.5L165.75 192.5L158 190.25L165.75 188L168 180Z" fill="url(#aiGrad)" />
+  <path d="M64 96L66.25 104L74 106.25L66.25 108.5L64 116.5L61.75 108.5L54 106.25L61.75 104L64 96Z" fill="#60A5FA" />
+  
+</svg>

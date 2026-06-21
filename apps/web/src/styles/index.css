@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #1e1e1e;
+  color: #cccccc;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  font-size: 13px;
+  overflow: hidden;
+}
+
+/* PDF viewer adjustments */
+.react-pdf__Page {
+  margin: 0 auto 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+  background: #fff;
+}
+.react-pdf__Page__textContent {
+  user-select: text;
+}
+.react-pdf__Page__textContent span::selection {
+  background: rgba(38, 79, 120, 0.6);
+}
+
+/* Thin VSCode-ish scrollbars */
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: #424242;
+  border-radius: 5px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: #5a5a5a;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Resize handle hover */
+[data-panel-resize-handle-enabled]:hover {
+  background: #007acc !important;
+}
+
+/* ByteMD editor: dark VSCode-ish theme to blend with the rest of the IDE.
+ * The editor lives inside `.slidev-bytemd` (see ByteMDEditor.jsx) so we scope
+ * our overrides there instead of polluting the global ByteMD theme. */
+.slidev-bytemd .bytemd {
+  height: 100%;
+  border: none;
+  background: #1e1e1e;
+  color: #cccccc;
+  font-size: 13px;
+}
+.slidev-bytemd .bytemd-toolbar {
+  background: #252526;
+  border-bottom: 1px solid #3c3c3c;
+  color: #cccccc;
+  /* Pin the toolbar so it stays visible regardless of which ancestor ends
+   * up scrolling. The Slidev edit pane wraps us in `<div class="h-full
+   * overflow-auto">`, and inserting screenshot data URLs / long markdown can
+   * make that wrapper scroll, which previously hid the toolbar. `sticky`
+   * keeps it glued to the top of whichever ancestor scrolls first. */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+.slidev-bytemd .bytemd-toolbar-icon:hover {
+  background: #2a2d2e;
+}
+.slidev-bytemd .bytemd-status {
+  background: #252526;
+  color: #858585;
+  border-top: 1px solid #3c3c3c;
+}
+/* Hide ByteMD's own preview pane only — we render our own Slidev preview on
+ * the left. Keep `.bytemd-toolbar-right` visible so users still get the
+ * built-in Fullscreen / Help / Sync-scroll affordances. Done via CSS so the
+ * layout stays deterministic across re-renders and resizes. */
+.slidev-bytemd .bytemd-preview {
+  display: none !important;
+}
+/* The body must not scroll itself — CodeMirror has its own scroller
+ * (`.CodeMirror-scroll`). Without `overflow:hidden` here, ByteMD's default
+ * `overflow:auto` competes with CodeMirror and prevents the editor from
+ * scrolling once content exceeds the viewport. */
+.slidev-bytemd .bytemd-body {
+  overflow: hidden !important;
+  display: block;
+}
+/* Default ByteMD ships `.bytemd-editor { display: inline-block }` so the
+ * preview can sit beside it. Once the preview is hidden, force the editor
+ * to fill the body so CodeMirror's height calculation is stable. */
+.slidev-bytemd .bytemd-editor {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  overflow: hidden;
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+}
+.slidev-bytemd .CodeMirror {
+  background: #1e1e1e !important;
+  color: #d4d4d4 !important;
+  height: 100% !important;
+}
+/* DO NOT override `.CodeMirror-scroll` — its stock CSS uses a negative-margin
+ * trick (`margin-bottom: -50px; margin-right: -50px; padding-bottom: 50px;
+ * overflow: scroll !important`) that hides the native scrollbar so CodeMirror
+ * can render its own `.CodeMirror-vscrollbar`. Replacing `overflow: scroll`
+ * with `overflow: auto` (or removing the negative margins) breaks scrolling
+ * entirely once content exceeds the viewport. */
+.slidev-bytemd .CodeMirror-gutters {
+  background: #1e1e1e !important;
+  border-right: 1px solid #3c3c3c !important;
+}
+.slidev-bytemd .CodeMirror-linenumber {
+  color: #858585 !important;
+}
+.slidev-bytemd .CodeMirror-cursor {
+  border-left-color: #aeafad !important;
+}
+.slidev-bytemd .CodeMirror-selected {
+  background: rgba(38, 79, 120, 0.6) !important;
+}

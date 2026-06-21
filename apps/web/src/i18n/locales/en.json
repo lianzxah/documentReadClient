@@ -1,0 +1,384 @@
+{
+  "languages": {
+    "en": "English",
+    "zh": "中文",
+    "switcher": "Language"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create",
+    "retry": "Retry",
+    "copy": "Copy",
+    "refresh": "Refresh",
+    "download": "Download",
+    "loading": "Loading...",
+    "savingDots": "Saving...",
+    "ingestingDots": "Ingesting...",
+    "errorWithMessage": "Error: {{message}}",
+    "relative": {
+      "secondsAgo": "{{count}}s ago",
+      "minutesAgo": "{{count}}m ago",
+      "hoursAgo": "{{count}}h ago",
+      "daysAgo": "{{count}}d ago"
+    }
+  },
+  "layout": {
+    "tabBar": {
+      "downloadPdf": "Download PDF",
+      "downloadEnabled": "Download the current PDF you are reading",
+      "downloadDisabled": "Open a document to enable download"
+    },
+    "activityBar": {
+      "documents": "Documents",
+      "outline": "Outline",
+      "chat": "Chat",
+      "translate": "Translate",
+      "ppt": "PPT"
+    },
+    "sideBar": {
+      "openByUrlTooltip": "Open PDF (Ctrl+T)",
+      "noDocsLine1": "No documents. Click the",
+      "noDocsLine2": "icon or press Ctrl+T to open a PDF (local file or URL).",
+      "open": "Open",
+      "recent": "Recent",
+      "sourceLocal": "local",
+      "sourceUrl": "url",
+      "deleteDoc": "Delete",
+      "openDocTooltip": "Open document",
+      "outlineNoDoc": "Open a PDF to see its outline.",
+      "outlineEmpty": "This document has no outline.",
+      "chatTitle": "Chat",
+      "chatPlaceholder": "The chat panel lives at the bottom. Press Ctrl+J to toggle, or use the dock button in the chat header to bring it back here.",
+      "translateTitle": "Translate",
+      "translatePlaceholder": "Select text in the PDF to translate. Use the toolbar to switch between ZH<->EN.",
+      "deleteConfirm": "Delete \"{{title}}\" and all its sessions, slides, and overrides? This cannot be undone."
+    },
+    "editorArea": {
+      "openByUrl": "Open PDF",
+      "orPressShortcut": "or press Ctrl+T"
+    },
+    "statusBar": {
+      "appName": "Document Reader",
+      "noDocOpen": "No document open",
+      "pageOf": "Page {{current}} / {{total}}",
+      "shortcuts": "Ctrl+T open  |  Ctrl+W close  |  Ctrl+J panel"
+    }
+  },
+  "reader": {
+    "openUrl": {
+      "title": "Open PDF by URL",
+      "placeholder": "https://example.com/paper.pdf",
+      "samplesLabel": "Sample PDFs:",
+      "open": "Open"
+    },
+    "openDoc": {
+      "title": "Open PDF",
+      "tabs": {
+        "browse": "Browse server",
+        "local": "Upload file",
+        "url": "By URL"
+      },
+      "browse": {
+        "roots": "Quick access",
+        "clickToEdit": "Click to type a path",
+        "goUp": "Go to parent folder",
+        "empty": "No PDF files in this directory.",
+        "selectHint": "Select a PDF file to open",
+        "open": "Open",
+        "permDenied": "Permission denied"
+      },
+      "local": {
+        "dropHint": "Drag a PDF here, or click to choose a file",
+        "choose": "Choose PDF...",
+        "chooseAnother": "Choose a different file",
+        "tooLarge": "File too large: {{size}} (max {{max}})",
+        "uploading": "Uploading {{percent}}%",
+        "uploaded": "Uploaded {{size}}",
+        "open": "Open",
+        "hint": "Up to {{max}}. Stored locally on the server cache; you can index it for chat later."
+      },
+      "index": {
+        "start": "Index for chat",
+        "running": "Indexing... {{percent}}%",
+        "notIndexed": "Not indexed",
+        "indexed": "Indexed",
+        "failed": "Index failed"
+      }
+    },
+    "viewer": {
+      "loading": "Loading PDF...",
+      "loadError": "Failed to load PDF. The document may not be cached yet."
+    }
+  },
+  "translate": {
+    "auto": "Auto",
+    "zh2en": "ZH -> EN",
+    "en2zh": "EN -> ZH",
+    "detected": "(detected: {{lang}})",
+    "translating": "Translating...",
+    "swap": "Swap direction",
+    "copy": "Copy",
+    "close": "Close"
+  },
+  "chat": {
+    "header": {
+      "title": "Chat",
+      "moveToBottom": "Move chat to bottom panel",
+      "dockToSide": "Dock chat into sidebar",
+      "clearSession": "Clear current session",
+      "preparingSession": "Preparing session..."
+    },
+    "empty": {
+      "openPdfFirst": "Open a PDF to start chatting about it.",
+      "ready": "Ask a question about this document. Answers are grounded in retrieved passages and include page citations."
+    },
+    "composer": {
+      "placeholder": "Ask about this document... (Enter to send, Shift+Enter for newline)",
+      "send": "Send",
+      "stop": "Stop",
+      "thinking": "Thinking..."
+    },
+    "messages": {
+      "sources": "Sources",
+      "jumpToPage": "Jump to page {{page}}",
+      "pageBadge": "p.{{page}}",
+      "answeredWithSkill": "Answered with skill: {{name}}",
+      "errorPrefix": "[error: {{message}}]"
+    },
+    "choice": {
+      "other": "Other (free input)",
+      "otherPlaceholder": "Type your own answer...",
+      "submit": "Submit answer",
+      "submitted": "Answered"
+    },
+    "sessions": {
+      "title": "Sessions",
+      "count": "Sessions ({{count}})",
+      "newSession": "New session",
+      "rename": "Rename",
+      "delete": "Delete",
+      "empty": "No sessions yet — start typing to create one.",
+      "deleteConfirm": "Delete this conversation? This cannot be undone.",
+      "skillBadge": "Skill: {{name}}"
+    },
+    "skill": {
+      "label": "Skill",
+      "useSession": "Use session skill",
+      "overrideHeading": "One-shot skill override",
+      "sessionHeading": "Default skill for this session",
+      "builtinSection": "Built-in",
+      "customSection": "Custom",
+      "customFallback": "Custom skill",
+      "nextReply": "Next reply:",
+      "clearOverride": "Clear",
+      "primary": "Primary",
+      "auxiliary": "Auxiliary",
+      "auxiliaryCount": "+{{count}}"
+    },
+    "toolCall": {
+      "calling": "Calling tool...",
+      "completed": "Tool call completed",
+      "expandResult": "Expand result"
+    }
+  },
+  "chatModel": {
+    "headerTitle": "Chat model for this document",
+    "useGlobal": "Use global ({{model}})",
+    "noPresets": "No presets available.",
+    "perDocOverride": "Per-doc override: {{model}}",
+    "usingGlobal": "Using global: {{model}}",
+    "globalUnset": "(unset)",
+    "noModel": "(no model)"
+  },
+  "settings": {
+    "title": "Settings \u2014 Models",
+    "tabs": {
+      "chat": {
+        "label": "LLM (Chat)",
+        "description": "Generates summaries, answers, translations and slides."
+      },
+      "embedding": {
+        "label": "Embedding",
+        "description": "Vector embeddings for the document RAG retrieval index."
+      },
+      "skills": {
+        "label": "Chat Skills",
+        "description": "Personas and reply styles applied to chat sessions."
+      },
+      "mcp": {
+        "label": "MCP Services",
+        "description": "Configure and manage MCP (Model Context Protocol) tool servers."
+      }
+    },
+    "fields": {
+      "baseURL": "Base URL",
+      "apiKey": "API Key",
+      "model": "Model"
+    },
+    "presets": {
+      "header": "Available presets"
+    },
+    "apiKey": {
+      "notSet": "(not set)",
+      "edit": "Edit",
+      "editTooltip": "Edit API key",
+      "cancelEdit": "Cancel edit",
+      "placeholderKeep": "Leave blank to keep existing key",
+      "placeholderNew": "sk-..."
+    },
+    "actions": {
+      "test": "Test"
+    },
+    "feedback": {
+      "noChanges": "No changes to save.",
+      "saved": "Saved.",
+      "saveFailed": "Save failed.",
+      "connectionOk": "Connection OK ({{ms}} ms).",
+      "connectionFailed": "Connection failed."
+    }
+  },
+  "mcp": {
+    "title": "MCP Servers",
+    "addServer": "Add Server",
+    "noServers": "No MCP servers configured. Click 'Add Server' to get started.",
+    "fields": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Filesystem Tools",
+      "transport": "Transport",
+      "command": "Command",
+      "commandPlaceholder": "e.g. npx",
+      "args": "Arguments",
+      "argsPlaceholder": "One argument per line",
+      "url": "Server URL",
+      "urlPlaceholder": "http://localhost:3001/sse",
+      "env": "Environment variables",
+      "envPlaceholder": "KEY=VALUE (one per line)",
+      "envHint": "Environment variables passed to the MCP server process.",
+      "envAdd": "Add variable",
+      "argsHint": "Space-separated arguments.",
+      "enabled": "Enabled"
+    },
+    "status": {
+      "connected": "Connected",
+      "disconnected": "Disconnected",
+      "toolCount": "{{count}} tools",
+      "error": "Error: {{message}}"
+    },
+    "actions": {
+      "test": "Test connection",
+      "testing": "Testing...",
+      "delete": "Delete",
+      "deleteConfirm": "Delete MCP server \"{{name}}\"?"
+    },
+    "feedback": {
+      "created": "MCP server added.",
+      "updated": "MCP server updated.",
+      "deleted": "MCP server deleted.",
+      "testOk": "Connection OK ({{ms}} ms), found {{count}} tools.",
+      "testFailed": "Connection failed."
+    }
+  },
+  "skills": {
+    "headerCustom": "Custom",
+    "headerBuiltin": "Built-in",
+    "newCustom": "New custom skill",
+    "emptyCustom": "None yet. Click + to create one.",
+    "selectHint": "Select a skill on the left, or click + to create your own.",
+    "builtinReadOnly": "Built-in skill prompts are not editable. Create a custom skill if you want to author your own.",
+    "noDescription": "(no description)",
+    "fields": {
+      "name": "Name",
+      "namePlaceholder": "e.g. Domain-Specific Tutor",
+      "description": "Description",
+      "descriptionPlaceholder": "Short blurb shown in the skill picker",
+      "systemPrompt": "System prompt",
+      "systemPromptPlaceholder": "ROLE: ...\n\nOUTPUT FORMAT: ...",
+      "systemPromptHint": "The base RAG instructions (citations, grounding, markdown formatting) are applied automatically. Use this prompt to define role, output format, and style.",
+      "temperatureShort": "Temperature",
+      "topKShort": "topK",
+      "maxTokensShort": "maxTokens",
+      "temperature": "Temperature (0-2)",
+      "topK": "topK (1-30)",
+      "maxTokens": "maxTokens (50-8000)"
+    },
+    "create": "Create custom skill",
+    "editing": "Edit skill",
+    "creating": "Create custom skill",
+    "feedback": {
+      "validation": "Name and system prompt are required.",
+      "created": "Skill created.",
+      "updated": "Skill updated.",
+      "deleted": "Skill deleted.",
+      "saveFailed": "Save failed.",
+      "deleteFailed": "Delete failed."
+    },
+    "import": {
+      "button": "Import skill package (.zip)",
+      "busy": "Analysing skill package…",
+      "success": "Imported draft from \"{{name}}\". Review and click Create to save.",
+      "failed": "Import failed.",
+      "invalidFile": "Please select a .zip skill package."
+    },
+    "deleteConfirm": "Delete skill \"{{name}}\"?"
+  },
+  "slidev": {
+    "panel": {
+      "title": "PPT Generator",
+      "openDocFirst": "Open a document to generate slides",
+      "intro": "Generate a presentation from the current document using AI.",
+      "generate": "Generate PPT",
+      "regenerate": "Regenerate",
+      "regenerateConfirmDirty": "Regenerating will discard your unsaved edits. Continue?",
+      "regenerateConfirm": "Regenerating will overwrite the current slides. Continue?",
+      "edit": "Edit",
+      "exitEdit": "Exit edit",
+      "present": "Present",
+      "download": "Download",
+      "statusFallback": "Generating slides...",
+      "slideCount_one": "{{count}} slide",
+      "slideCount_other": "{{count}} slides"
+    },
+    "editor": {
+      "saving": "Saving...",
+      "saveFailed": "Save failed: {{error}}",
+      "editing": "Editing...",
+      "savedAt": "Saved {{relative}}",
+      "saveTooltip": "Save (Ctrl+S)",
+      "save": "Save",
+      "showPdf": "Show PDF",
+      "hidePdf": "Hide PDF",
+      "showPdfTooltip": "Show PDF pane",
+      "hidePdfTooltip": "Hide PDF pane",
+      "exitEdit": "Exit edit",
+      "exitEditTooltip": "Exit edit mode (saves pending changes)",
+      "editingTab": "Editing: {{title}}",
+      "untitled": "Slidev",
+      "justNow": "just now"
+    },
+    "preview": {
+      "counter": "{{current}} / {{total}}",
+      "prev": "Previous",
+      "next": "Next"
+    },
+    "presenter": {
+      "exit": "Exit (ESC)",
+      "counter": "{{current}} / {{total}}"
+    },
+    "bytemd": {
+      "captureToolbar": "Capture screenshot, crop, and insert as image",
+      "selectInPdf": "Drag to select an area in the PDF pane. Esc to cancel.",
+      "waitingPermission": "Waiting for screen capture permission…",
+      "captureFailed": "Capture failed",
+      "pdfPaneNotVisible": "PDF pane is not visible. Open the PDF pane (toolbar in the editor header) and try again, or use the Crop dialog after capture.",
+      "selectionTooSmall": "Selection is too small; drag a larger rectangle.",
+      "fallbackTargetMissing": "Fallback screenshot target not found. Make sure the PDF pane is visible and try again.",
+      "cropTitle": "Crop screenshot",
+      "cropHint": "Drag a rectangle on the image to select an area, then press Insert. Without a selection, the full frame is inserted.",
+      "insert": "Insert"
+    }
+  }
+}
