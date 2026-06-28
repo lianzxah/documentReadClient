@@ -1,10 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Type, Image as ImageIcon, Shapes, Download, Table2, Minus, ChevronDown, LayoutTemplate } from 'lucide-react';
+import { Type, Image as ImageIcon, Shapes, Download, Table2, BarChart3, ChevronDown, LayoutTemplate } from 'lucide-react';
 import { usePptxStore } from '../../store/pptxStore';
 import { exportToPptx } from './export';
 import { ShapePool } from './ShapePool';
 import { TableGenerator } from './TableGenerator';
-import { LINE_LIST } from './configs/lines';
+import { ChartCreator } from './ChartCreator';
 import { nanoid } from 'nanoid';
 
 // Dropdown wrapper with click-outside handling
@@ -85,26 +85,6 @@ export function Toolbar({ onOpenTemplates }) {
     input.click();
   };
 
-  const handleAddLine = (lineItem) => {
-    addElement(currentSlideIndex, {
-      id: `shape-${nanoid(8)}`,
-      type: 'shape',
-      shapeType: 'line',
-      lineType: lineItem.type,
-      svgPath: lineItem.path,
-      viewBox: lineItem.viewBox,
-      left: 300,
-      top: 260,
-      width: 400,
-      height: 4,
-      fillColor: 'none',
-      outlineColor: '#333333',
-      outlineWidth: 2,
-      outlined: true,
-      opacity: 1,
-    });
-  };
-
   const handleExport = () => {
     exportToPptx(slides);
   };
@@ -140,27 +120,9 @@ export function Toolbar({ onOpenTemplates }) {
           {(close) => <TableGenerator onInsert={close} />}
         </DropdownButton>
 
-        {/* Lines dropdown */}
-        <DropdownButton icon={Minus} label="Lines">
-          {(close) => (
-            <div className="p-3 w-48">
-              <div className="text-xs text-vs-muted mb-2 font-semibold">Lines</div>
-              <div className="flex flex-col gap-1">
-                {LINE_LIST.map((line) => (
-                  <button
-                    key={line.type}
-                    onClick={() => { handleAddLine(line); close(); }}
-                    className="flex items-center gap-2 p-2 rounded hover:bg-vs-hover text-vs-foreground text-sm w-full text-left"
-                  >
-                    <svg viewBox={`0 0 ${line.viewBox[0]} ${line.viewBox[1]}`} className="w-8 h-4 flex-shrink-0">
-                      <path d={line.path} fill="none" stroke="currentColor" strokeWidth="2" />
-                    </svg>
-                    <span className="capitalize">{line.type}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
+        {/* Charts dropdown */}
+        <DropdownButton icon={BarChart3} label="Charts">
+          {(close) => <ChartCreator onInsert={close} />}
         </DropdownButton>
 
         {/* Templates */}

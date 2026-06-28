@@ -1,4 +1,5 @@
 import pptxgen from 'pptxgenjs'
+import { CHART_COLORS } from './configs/charts'
 
 // Map our shape types to pptxgenjs shape types
 function getPptxShapeType(pptx, el) {
@@ -125,9 +126,180 @@ export function exportToPptx(slides, filename = 'Presentation.pptx') {
             colW: el.colWidths ? el.colWidths.map((cw) => cw * w) : undefined,
           })
         }
+      } else if (el.type === 'chart') {
+        // Export chart using pptxgenjs native chart support
+        exportChartElement(pptx, slide, el, x, y, w, h)
       }
     })
   })
 
   pptx.writeFile({ fileName: filename })
+}
+
+/**
+ * Export a chart element using pptxgenjs's native chart capabilities.
+ * Falls back to a placeholder shape if the chart type isn't directly supported.
+ */
+function exportChartElement(pptx, slide, el, x, y, w, h) {
+  const { chartType, chartData } = el
+  if (!chartData) return
+
+  const chartColors = CHART_COLORS.map((c) => c.replace('#', ''))
+
+  try {
+    switch (chartType) {
+      case 'bar':
+      case 'stackedBar': {
+        const series = (chartData.series || []).map((s) => ({
+          name: s.name,
+          labels: chartData.categories,
+          values: s.values,
+        }))
+        slide.addChart(pptx.charts.BAR, series, {
+          x,
+          y,
+          w,
+          h,
+          barDir: 'col',
+          barGrouping: chartType === 'stackedBar' ? 'stacked' : 'clustered',
+          chartColors,
+          showLegend: true,
+          legendPos: 't',
+        })
+        break
+      }
+      case 'line':
+      case 'area': {
+        const series = (chartData.series || []).map((s) => ({
+          name: s.name,
+          labels: chartData.categories,
+          values: s.values,
+        }))
+        slide.addChart(pptx.charts.LINE, series, {
+          x,
+          y,
+          w,
+          h,
+          chartColors,
+          showLegend: true,
+          legendPos: 't',
+          lineSmooth: true,
+          lineFill: chartType === 'area',
+        })
+        break
+      }
+      case 'pie':
+      case 'doughnut': {
+        const items = chartData.items || []
+        const series = [
+          {
+            name: 'Data',
+            labels: items.map((i) => i.name),
+            values: items.map((i) => i.value),
+          },
+        ]
+        slide.addChart(
+          chartType === 'doughnut' ? pptx.charts.DOUGHNUT : pptx.charts.PIE,
+          series,
+          { x, y, w, h, chartColors, showLegend: true, legendPos: 'r' },
+        )
+        break
+      }
+      case 'scatter': {
+        const series = (chartData.series || []).map((s) => ({
+          name: s.name,
+          values: s.values.map((pt) => pt[1]),
+          labels: s.values.map((pt) => String(pt[0])),
+        }))
+        slide.addChart(pptx.charts.SCATTER, series, {
+          x,
+          y,
+          w,
+          h,
+          chartColors,
+          showLegend: true,
+        })
+        break
+      }
+      case 'radar': {
+        const indicators = chartData.indicators || []
+        const series = (chartData.series || []).map((s) => ({
+          name: s.name,
+          labels: indicators.map((ind) => ind.name),
+          values: s.values,
+        }))
+        slide.addChart(pptx.charts.RADAR, series, {
+          x,
+          y,
+          w,
+          h,
+          chartColors,
+          showLegend: true,
+        })
+        break
+      }
+      case 'combo': {
+        // Combo chart: bar + line
+        const barSeries = (chartData.barSeries || []).map((s) => ({
+          name: s.name,
+          labels: chartData.categories,
+          values: s.values,
+        }))
+        const lineSeries = (chartData.lineSeries || []).map((s) => ({
+          name: s.name,
+          labels: chartData.categories,
+          values: s.values,
+        }))
+        // Use a multi-type chart by adding bar first, then line overlay
+        if (barSeries.length > 0) {
+          slide.addChart(pptx.charts.BAR, barSeries, {
+            x,
+            y,
+            w,
+            h,
+            barDir: 'col',
+            chartColors,
+            showLegend: true,
+            legendPos: 't',
+          })
+        }
+        // Note: pptxgenjs doesn't support true combo in one call;
+        // for a better result, fall through to image export
+        break
+      }
+      default: {
+        // For unsupported types (funnel, waterfall, gauge),
+        // add a placeholder with the chart type label
+        slide.addShape(pptx.ShapeType.rect, {
+          x,
+          y,
+          w,
+          h,
+          fill: { color: 'F8F9FA' },
+          line: { color: 'CCCCCC', width: 1 },
+        })
+        slide.addText(`[${chartType} chart]`, {
+          x,
+          y,
+          w,
+          h,
+          align: 'center',
+          valign: 'middle',
+          fontSize: 14,
+          color: '666666',
+        })
+      }
+    }
+  } catch (err) {
+    console.warn('[export] Chart export failed:', err)
+    // Fallback: placeholder rectangle
+    slide.addShape(pptx.ShapeType.rect, {
+      x,
+      y,
+      w,
+      h,
+      fill: { color: 'F8F9FA' },
+      line: { color: 'CCCCCC', width: 1 },
+    })
+  }
 }

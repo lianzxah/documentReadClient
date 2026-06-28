@@ -1,49 +1,7 @@
-import React from 'react';
+import React, { useRef, useState, useCallback } from 'react';
 import { Plus, Trash2, Copy, GripVertical } from 'lucide-react';
 import { usePptxStore } from '../../store/pptxStore';
-
-// Thumbnail SVG shape renderer
-function ThumbShape({ el }) {
-  if (el.svgPath && el.viewBox) {
-    return (
-      <div className="absolute" style={{ left: el.left, top: el.top, width: el.width, height: el.height, opacity: el.opacity }}>
-        <svg viewBox={`0 0 ${el.viewBox[0]} ${el.viewBox[1]}`} className="w-full h-full" preserveAspectRatio="none">
-          <path d={el.svgPath} fill={el.outlined ? 'none' : (el.fillColor || '#4b83f0')} stroke={el.outlineColor || 'none'} strokeWidth={el.outlineWidth || 0} />
-        </svg>
-      </div>
-    );
-  }
-  // Fallback CSS shapes
-  return (
-    <div
-      className="absolute"
-      style={{
-        left: el.left, top: el.top, width: el.width, height: el.height,
-        backgroundColor: el.fillColor,
-        borderRadius: el.shapeType === 'circle' ? '50%' : '0',
-        transform: `rotate(${el.rotate || 0}deg)`,
-      }}
-    />
-  );
-}
-
-// Thumbnail table renderer  
-function ThumbTable({ el }) {
-  const rows = el.data?.length || 2;
-  const cols = el.data?.[0]?.length || 2;
-  return (
-    <div
-      className="absolute border border-gray-300"
-      style={{ left: el.left, top: el.top, width: el.width, height: el.height }}
-    >
-      <div className="w-full h-full grid" style={{ gridTemplateRows: `repeat(${rows}, 1fr)`, gridTemplateColumns: `repeat(${cols}, 1fr)` }}>
-        {Array.from({ length: rows * cols }).map((_, i) => (
-          <div key={i} className="border border-gray-200" style={{ backgroundColor: i < cols ? (el.theme?.color || '#4b83f0') : 'white' }} />
-        ))}
-      </div>
-    </div>
-  );
-}
+import { SlideThumbnail } from './SlideThumbnail';
 
 export function SlideList() {
   const slides = usePptxStore((s) => s.slides);
@@ -52,32 +10,98 @@ export function SlideList() {
   const addSlide = usePptxStore((s) => s.addSlide);
   const deleteSlide = usePptxStore((s) => s.deleteSlide);
   const duplicateSlide = usePptxStore((s) => s.duplicateSlide);
+  const reorderSlides = usePptxStore((s) => s.reorderSlides);
+
+  // Drag-and-drop state
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const dragNodeRef = useRef(null);
+
+  const handleDragStart = useCallback((e, index) => {
+    setDragIndex(index);
+    dragNodeRef.current = e.currentTarget;
+    e.dataTransfer.effectAllowed = 'move';
+    // Set ghost image opacity
+    e.currentTarget.style.opacity = '0.5';
+  }, []);
+
+  const handleDragEnd = useCallback((e) => {
+    e.currentTarget.style.opacity = '1';
+    if (dragIndex !== null && dragOverIndex !== null && dragIndex !== dragOverIndex) {
+      reorderSlides(dragIndex, dragOverIndex);
+    }
+    setDragIndex(null);
+    setDragOverIndex(null);
+    dragNodeRef.current = null;
+  }, [dragIndex, dragOverIndex, reorderSlides]);
+
+  const handleDragOver = useCallback((e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragIndex !== index) {
+      setDragOverIndex(index);
+    }
+  }, [dragIndex]);
+
+  const handleDragLeave = useCallback(() => {
+    setDragOverIndex(null);
+  }, []);
 
   return (
-    <div className="w-48 bg-vs-sidebar border-r border-vs-border flex flex-col">
+    <div className="w-52 bg-vs-sidebar border-r border-vs-border flex flex-col">
+      {/* Header */}
       <div className="p-2 border-b border-vs-border flex justify-between items-center">
-        <span className="text-xs font-semibold text-vs-muted">Slides</span>
+        <span className="text-xs font-semibold text-vs-muted uppercase tracking-wide">Slides</span>
         <button
           onClick={addSlide}
-          className="p-1 hover:bg-vs-hover rounded text-vs-foreground flex items-center justify-center"
+          className="p-1 hover:bg-vs-hover rounded text-vs-foreground flex items-center justify-center transition-colors"
           title="New Slide"
         >
           <Plus size={16} />
         </button>
       </div>
-      <div className="overflow-y-auto p-2 flex flex-col gap-2 flex-1">
+
+      {/* Slide List */}
+      <div className="overflow-y-auto p-2 flex flex-col gap-1.5 flex-1 scrollbar-thin">
         {slides.map((slide, index) => (
           <div
             key={slide.id}
-            className={`relative p-1 cursor-pointer border-2 rounded group ${currentSlideIndex === index ? 'border-blue-500 bg-vs-hover' : 'border-transparent hover:border-vs-border'}`}
+            draggable
+            onDragStart={(e) => handleDragStart(e, index)}
+            onDragEnd={handleDragEnd}
+            onDragOver={(e) => handleDragOver(e, index)}
+            onDragLeave={handleDragLeave}
+            className={`
+              relative p-1 cursor-pointer rounded-md group transition-all duration-150
+              ${currentSlideIndex === index
+                ? 'ring-2 ring-blue-500 bg-vs-hover shadow-sm'
+                : 'border border-transparent hover:border-vs-border hover:bg-vs-hover/50'
+              }
+              ${dragOverIndex === index && dragIndex !== index
+                ? 'border-t-2 border-t-blue-400'
+                : ''
+              }
+            `}
             onClick={() => setCurrentSlideIndex(index)}
           >
-            <div className="flex justify-between items-center mb-1 ml-1">
-              <span className="text-xs text-vs-muted">{index + 1}</span>
-              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100">
+            {/* Slide number and action buttons row */}
+            <div className="flex justify-between items-center mb-1 px-0.5">
+              <div className="flex items-center gap-1">
+                {/* Drag handle */}
+                <GripVertical
+                  size={10}
+                  className="text-vs-muted opacity-0 group-hover:opacity-60 cursor-grab active:cursor-grabbing transition-opacity"
+                />
+                <span className="text-[10px] font-medium text-vs-muted tabular-nums">
+                  {index + 1}
+                </span>
+              </div>
+
+              {/* Action buttons */}
+              <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
                 <button
                   onClick={(e) => { e.stopPropagation(); duplicateSlide(index); }}
-                  className="text-vs-muted hover:text-vs-foreground p-0.5 rounded hover:bg-vs-border"
+                  className="text-vs-muted hover:text-vs-foreground p-0.5 rounded hover:bg-vs-border transition-colors"
                   title="Duplicate Slide"
                 >
                   <Copy size={11} />
@@ -85,7 +109,7 @@ export function SlideList() {
                 {slides.length > 1 && (
                   <button
                     onClick={(e) => { e.stopPropagation(); deleteSlide(index); }}
-                    className="text-red-400 hover:text-red-300 p-0.5 rounded hover:bg-vs-border"
+                    className="text-red-400 hover:text-red-300 p-0.5 rounded hover:bg-red-500/10 transition-colors"
                     title="Delete Slide"
                   >
                     <Trash2 size={11} />
@@ -93,62 +117,9 @@ export function SlideList() {
                 )}
               </div>
             </div>
-            <div className="aspect-video bg-vs-bg border border-vs-border rounded shadow-sm overflow-hidden flex items-center justify-center relative">
-              <div
-                className="absolute w-full h-full pointer-events-none origin-top-left"
-                style={{
-                  backgroundColor: slide.background?.color || '#ffffff',
-                  transform: 'scale(0.15)',
-                  width: '1000px',
-                  height: '562.5px'
-                }}
-              >
-                {slide.elements.map((el) => {
-                  if (el.type === 'text') {
-                    return (
-                      <div
-                        key={el.id}
-                        className="absolute overflow-hidden"
-                        style={{
-                          left: el.left || 0, top: el.top || 0,
-                          width: el.width || 100, height: el.height || 100,
-                          color: el.color, fontSize: el.fontSize,
-                          fontWeight: el.fontWeight, textAlign: el.align,
-                          whiteSpace: 'pre-wrap', wordBreak: 'break-word',
-                          transform: `rotate(${el.rotate || 0}deg)`,
-                          opacity: el.opacity,
-                        }}
-                      >
-                        {el.content}
-                      </div>
-                    );
-                  }
-                  if (el.type === 'image') {
-                    return (
-                      <img
-                        key={el.id}
-                        src={el.src}
-                        alt=""
-                        className="absolute"
-                        style={{
-                          left: el.left || 0, top: el.top || 0,
-                          width: el.width || 100, height: el.height || 100,
-                          objectFit: 'contain',
-                          transform: `rotate(${el.rotate || 0}deg)`,
-                        }}
-                      />
-                    );
-                  }
-                  if (el.type === 'shape') {
-                    return <ThumbShape key={el.id} el={el} />;
-                  }
-                  if (el.type === 'table') {
-                    return <ThumbTable key={el.id} el={el} />;
-                  }
-                  return null;
-                })}
-              </div>
-            </div>
+
+            {/* Thumbnail */}
+            <SlideThumbnail slide={slide} slideIndex={index} />
           </div>
         ))}
       </div>

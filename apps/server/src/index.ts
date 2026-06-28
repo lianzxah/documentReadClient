@@ -13,6 +13,7 @@ import { overridesRoutes } from './routes/overrides.js';
 import { skillsRoutes } from './routes/skills.js';
 import { filesystemRoutes } from './routes/filesystem.js';
 import { mcpRoutes } from './routes/mcp.js';
+import { pptxRoutes } from './routes/pptx.js';
 import { initMcpConnections } from './services/mcpClient.js';
 
 async function main() {
@@ -57,6 +58,7 @@ async function main() {
   await app.register(skillsRoutes);
   await app.register(filesystemRoutes);
   await app.register(mcpRoutes);
+  await app.register(pptxRoutes);
 
   try {
     await app.listen({ port: config.PORT, host: config.HOST });

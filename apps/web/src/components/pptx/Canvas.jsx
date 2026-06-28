@@ -2,6 +2,8 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Rnd } from 'react-rnd';
 import { usePptxStore } from '../../store/pptxStore';
 import { TableElement } from './TableElement';
+import { ChartElement } from './ChartElement';
+import { ChartEditor } from './ChartEditor';
 import { SHAPE_PATH_FORMULAS } from './configs/shapes';
 
 // Render SVG shape element
@@ -77,6 +79,7 @@ export function Canvas({ slideIndex }) {
   const slide = slides[slideIndex];
   const containerRef = useRef(null);
   const [scale, setScale] = useState(1);
+  const [editingChartId, setEditingChartId] = useState(null);
 
   const BASE_WIDTH = 1000;
   const BASE_HEIGHT = 562.5;
@@ -216,10 +219,30 @@ export function Canvas({ slideIndex }) {
               {el.type === 'table' && (
                 <TableElement element={el} slideIndex={slideIndex} isSelected={isSelected} />
               )}
+              {el.type === 'chart' && (
+                <ChartElement
+                  element={el}
+                  isSelected={isSelected}
+                  onDoubleClick={() => setEditingChartId(el.id)}
+                />
+              )}
             </Rnd>
           );
         })}
       </div>
+
+      {/* Chart Editor Modal */}
+      {editingChartId && (() => {
+        const chartEl = slide.elements.find((e) => e.id === editingChartId);
+        if (!chartEl) return null;
+        return (
+          <ChartEditor
+            element={chartEl}
+            slideIndex={slideIndex}
+            onClose={() => setEditingChartId(null)}
+          />
+        );
+      })()}
     </div>
   );
 }

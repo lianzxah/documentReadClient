@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { LogOut } from 'lucide-react';
 import { usePptxStore } from '../../store/pptxStore';
 import { useSlidevStore } from '../../store/slidevStore';
 import { useUIStore } from '../../store/uiStore';
@@ -37,8 +38,9 @@ export function PptxEditor() {
         <div>
           <button
             onClick={() => setPptxEditMode(false)}
-            className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-vs-hover hover:bg-vs-border text-vs-foreground"
+            className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium rounded transition-colors bg-vs-hover hover:bg-red-500/10 hover:text-red-400 text-vs-foreground"
           >
+            <LogOut size={14} />
             Exit Visual Edit
           </button>
         </div>

@@ -16,7 +16,8 @@ coverage/
 .idea/
 .pnpm-store/
 .debug-analysis/
-.plan/
 .qoder/
 .question/
+.issues/
 .trae/
+.itorator/

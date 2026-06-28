@@ -7,7 +7,7 @@ import { config } from '../config.js';
 let _browser: Browser | null = null;
 let _renderDir: string | null = null;
 
-async function getBrowser(): Promise<Browser> {
+export async function getBrowser(): Promise<Browser> {
   if (!_browser || !_browser.connected) {
     try {
       _browser = await puppeteer.launch({

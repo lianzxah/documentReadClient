@@ -9,6 +9,10 @@ export const usePptxStore = create((set, get) => ({
   // 表格编辑状态
   selectedTableCells: [],
   editingTableCellId: null,
+  // 缩略图缓存: slideId -> dataURL
+  thumbnails: {},
+  // 标记需要更新缩略图的 slide IDs
+  dirtyThumbnails: new Set(),
 
   setSlides: (slides) => set({ slides }),
   setCurrentSlideIndex: (index) =>
@@ -17,6 +21,28 @@ export const usePptxStore = create((set, get) => ({
   setTemplates: (templates) => set({ templates }),
   setSelectedTableCells: (cells) => set({ selectedTableCells: cells }),
   setEditingTableCellId: (id) => set({ editingTableCellId: id }),
+
+  // 缩略图管理
+  setThumbnail: (slideId, dataUrl) =>
+    set((state) => ({
+      thumbnails: { ...state.thumbnails, [slideId]: dataUrl },
+      dirtyThumbnails: (() => {
+        const s = new Set(state.dirtyThumbnails)
+        s.delete(slideId)
+        return s
+      })(),
+    })),
+  clearThumbnail: (slideId) =>
+    set((state) => {
+      const { [slideId]: _, ...rest } = state.thumbnails
+      return { thumbnails: rest }
+    }),
+  markThumbnailDirty: (slideId) =>
+    set((state) => {
+      const s = new Set(state.dirtyThumbnails)
+      s.add(slideId)
+      return { dirtyThumbnails: s }
+    }),
 
   addSlide: () =>
     set((state) => {
@@ -56,12 +82,16 @@ export const usePptxStore = create((set, get) => ({
   deleteSlide: (index) =>
     set((state) => {
       if (state.slides.length <= 1) return state
+      const deletedSlide = state.slides[index]
       const newSlides = state.slides.filter((_, i) => i !== index)
       const newIndex = Math.min(state.currentSlideIndex, newSlides.length - 1)
+      // 清理已删除幻灯片的缩略图缓存
+      const { [deletedSlide?.id]: _, ...remainingThumbnails } = state.thumbnails
       return {
         slides: newSlides,
         currentSlideIndex: newIndex,
         activeElementId: null,
+        thumbnails: remainingThumbnails,
       }
     }),
 
@@ -88,6 +118,7 @@ export const usePptxStore = create((set, get) => ({
   updateSlideBackground: (slideIndex, background) =>
     set((state) => {
       const newSlides = [...state.slides]
+      const slideId = newSlides[slideIndex]?.id
       newSlides[slideIndex] = {
         ...newSlides[slideIndex],
         background:
@@ -95,7 +126,9 @@ export const usePptxStore = create((set, get) => ({
             ? { type: 'solid', color: background }
             : background,
       }
-      return { slides: newSlides }
+      const dirtyThumbnails = new Set(state.dirtyThumbnails)
+      if (slideId) dirtyThumbnails.add(slideId)
+      return { slides: newSlides, dirtyThumbnails }
     }),
 
   updateElement: (slideIndex, elementId, newProps) =>
@@ -106,23 +139,31 @@ export const usePptxStore = create((set, get) => ({
       if (elIndex !== -1) {
         slide.elements[elIndex] = { ...slide.elements[elIndex], ...newProps }
       }
-      return { slides: newSlides }
+      const dirtyThumbnails = new Set(state.dirtyThumbnails)
+      if (slide?.id) dirtyThumbnails.add(slide.id)
+      return { slides: newSlides, dirtyThumbnails }
     }),
 
   addElement: (slideIndex, element) =>
     set((state) => {
       const newSlides = [...state.slides]
+      const slideId = newSlides[slideIndex]?.id
       newSlides[slideIndex].elements.push(element)
-      return { slides: newSlides, activeElementId: element.id }
+      const dirtyThumbnails = new Set(state.dirtyThumbnails)
+      if (slideId) dirtyThumbnails.add(slideId)
+      return { slides: newSlides, activeElementId: element.id, dirtyThumbnails }
     }),
 
   removeElement: (slideIndex, elementId) =>
     set((state) => {
       const newSlides = [...state.slides]
+      const slideId = newSlides[slideIndex]?.id
       newSlides[slideIndex].elements = newSlides[slideIndex].elements.filter(
         (e) => e.id !== elementId,
       )
-      return { slides: newSlides, activeElementId: null }
+      const dirtyThumbnails = new Set(state.dirtyThumbnails)
+      if (slideId) dirtyThumbnails.add(slideId)
+      return { slides: newSlides, activeElementId: null, dirtyThumbnails }
     }),
 
   bringToFront: (slideIndex, elementId) =>
