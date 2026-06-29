@@ -12,6 +12,9 @@ const THUMB_HEIGHT = 108
 // Reusable offscreen container (persists in DOM, hidden)
 let offscreenContainer = null
 
+// Serialization queue to prevent race conditions with the shared container
+let generationQueue = Promise.resolve()
+
 function getOffscreenContainer() {
   if (offscreenContainer && document.body.contains(offscreenContainer)) {
     return offscreenContainer
@@ -169,11 +172,10 @@ function buildSlideHTML(slide) {
 }
 
 /**
- * Generate a thumbnail data URL from slide data.
- * @param {Object} slide - Slide data with elements and background
- * @returns {Promise<string>} PNG data URL of the thumbnail
+ * Internal: generate a thumbnail without queue protection.
+ * Must only be called within the serialized queue.
  */
-export async function generateThumbnail(slide) {
+async function generateThumbnailInternal(slide) {
   const container = getOffscreenContainer()
   container.innerHTML = buildSlideHTML(slide)
 
@@ -212,6 +214,20 @@ export async function generateThumbnail(slide) {
   } finally {
     container.innerHTML = ''
   }
+}
+
+/**
+ * Generate a thumbnail data URL from slide data.
+ * Uses a serialization queue to prevent race conditions when multiple
+ * slides generate thumbnails concurrently with the shared offscreen container.
+ * @param {Object} slide - Slide data with elements and background
+ * @returns {Promise<string>} PNG data URL of the thumbnail
+ */
+export function generateThumbnail(slide) {
+  const result = generationQueue.then(() => generateThumbnailInternal(slide))
+  // Update the queue; swallow errors so subsequent tasks still run
+  generationQueue = result.catch(() => {})
+  return result
 }
 
 /**

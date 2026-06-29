@@ -5,6 +5,8 @@ export const usePptxStore = create((set, get) => ({
   slides: [],
   currentSlideIndex: 0,
   activeElementId: null,
+  editingElementId: null, // Element currently in inline-edit mode (text/shape)
+  disableHotkeys: false, // True when inline editor is focused
   templates: [],
   // 表格编辑状态
   selectedTableCells: [],
@@ -13,14 +15,97 @@ export const usePptxStore = create((set, get) => ({
   thumbnails: {},
   // 标记需要更新缩略图的 slide IDs
   dirtyThumbnails: new Set(),
+  // Undo/Redo history
+  history: [],
+  historyIndex: -1,
+  maxHistory: 50,
+  // Clipboard for copy/paste
+  clipboard: null,
 
   setSlides: (slides) => set({ slides }),
   setCurrentSlideIndex: (index) =>
-    set({ currentSlideIndex: index, activeElementId: null }),
-  setActiveElementId: (id) => set({ activeElementId: id }),
+    set({ currentSlideIndex: index, activeElementId: null, editingElementId: null }),
+  setActiveElementId: (id) => set((state) => ({
+    activeElementId: id,
+    // Clear editing if selecting a different element
+    editingElementId: id === state.editingElementId ? state.editingElementId : null,
+  })),
+  setEditingElementId: (id) => set({ editingElementId: id }),
+  setDisableHotkeys: (disabled) => set({ disableHotkeys: disabled }),
   setTemplates: (templates) => set({ templates }),
   setSelectedTableCells: (cells) => set({ selectedTableCells: cells }),
   setEditingTableCellId: (id) => set({ editingTableCellId: id }),
+
+  // --- History (Undo/Redo) ---
+  pushHistory: () => set((state) => {
+    const snapshot = JSON.parse(JSON.stringify(state.slides))
+    const newHistory = state.history.slice(0, state.historyIndex + 1)
+    newHistory.push(snapshot)
+    if (newHistory.length > state.maxHistory) newHistory.shift()
+    return { history: newHistory, historyIndex: newHistory.length - 1 }
+  }),
+  undo: () => set((state) => {
+    if (state.historyIndex <= 0) return state
+    const newIndex = state.historyIndex - 1
+    const restored = JSON.parse(JSON.stringify(state.history[newIndex]))
+    return {
+      slides: restored,
+      historyIndex: newIndex,
+      activeElementId: null,
+      editingElementId: null,
+    }
+  }),
+  redo: () => set((state) => {
+    if (state.historyIndex >= state.history.length - 1) return state
+    const newIndex = state.historyIndex + 1
+    const restored = JSON.parse(JSON.stringify(state.history[newIndex]))
+    return {
+      slides: restored,
+      historyIndex: newIndex,
+      activeElementId: null,
+      editingElementId: null,
+    }
+  }),
+
+  // --- Clipboard (Copy/Cut/Paste) ---
+  copyElement: () => set((state) => {
+    const slide = state.slides[state.currentSlideIndex]
+    if (!slide || !state.activeElementId) return state
+    const el = slide.elements.find((e) => e.id === state.activeElementId)
+    if (!el) return state
+    return { clipboard: JSON.parse(JSON.stringify(el)) }
+  }),
+  cutElement: () => {
+    const state = get()
+    const slide = state.slides[state.currentSlideIndex]
+    if (!slide || !state.activeElementId) return
+    const el = slide.elements.find((e) => e.id === state.activeElementId)
+    if (!el) return
+    set({ clipboard: JSON.parse(JSON.stringify(el)) })
+    get().removeElement(state.currentSlideIndex, state.activeElementId)
+  },
+  pasteElement: () => set((state) => {
+    const { clipboard, currentSlideIndex, slides } = state
+    if (!clipboard) return state
+    const newEl = {
+      ...JSON.parse(JSON.stringify(clipboard)),
+      id: `${clipboard.type}-${nanoid(8)}`,
+      left: (clipboard.left || 0) + 20,
+      top: (clipboard.top || 0) + 20,
+    }
+    const newSlides = [...slides]
+    newSlides[currentSlideIndex] = {
+      ...newSlides[currentSlideIndex],
+      elements: [...newSlides[currentSlideIndex].elements, newEl],
+    }
+    const dirtyThumbnails = new Set(state.dirtyThumbnails)
+    dirtyThumbnails.add(newSlides[currentSlideIndex].id)
+    return { slides: newSlides, activeElementId: newEl.id, dirtyThumbnails }
+  }),
+  duplicateElement: () => {
+    get().copyElement()
+    get().pasteElement()
+  },
 
   // 缩略图管理
   setThumbnail: (slideId, dataUrl) =>
@@ -44,7 +129,7 @@ export const usePptxStore = create((set, get) => ({
       return { dirtyThumbnails: s }
     }),
 
-  addSlide: () =>
+  addSlide: () => {
     set((state) => {
       const newSlide = {
         id: `slide-${nanoid(8)}`,
@@ -58,9 +143,11 @@ export const usePptxStore = create((set, get) => ({
         currentSlideIndex: state.currentSlideIndex + 1,
         activeElementId: null,
       }
-    }),
+    })
+    get().pushHistory()
+  },
 
-  duplicateSlide: (index) =>
+  duplicateSlide: (index) => {
     set((state) => {
       const sourceSlide = state.slides[index]
       if (!sourceSlide) return state
@@ -77,15 +164,16 @@ export const usePptxStore = create((set, get) => ({
         currentSlideIndex: index + 1,
         activeElementId: null,
       }
-    }),
+    })
+    get().pushHistory()
+  },
 
-  deleteSlide: (index) =>
+  deleteSlide: (index) => {
     set((state) => {
       if (state.slides.length <= 1) return state
       const deletedSlide = state.slides[index]
       const newSlides = state.slides.filter((_, i) => i !== index)
       const newIndex = Math.min(state.currentSlideIndex, newSlides.length - 1)
-      // 清理已删除幻灯片的缩略图缓存
       const { [deletedSlide?.id]: _, ...remainingThumbnails } = state.thumbnails
       return {
         slides: newSlides,
@@ -93,7 +181,9 @@ export const usePptxStore = create((set, get) => ({
         activeElementId: null,
         thumbnails: remainingThumbnails,
       }
-    }),
+    })
+    get().pushHistory()
+  },
 
   reorderSlides: (fromIndex, toIndex) =>
     set((state) => {
@@ -144,7 +234,7 @@ export const usePptxStore = create((set, get) => ({
       return { slides: newSlides, dirtyThumbnails }
     }),
 
-  addElement: (slideIndex, element) =>
+  addElement: (slideIndex, element) => {
     set((state) => {
       const newSlides = [...state.slides]
       const slideId = newSlides[slideIndex]?.id
@@ -152,9 +242,11 @@ export const usePptxStore = create((set, get) => ({
       const dirtyThumbnails = new Set(state.dirtyThumbnails)
       if (slideId) dirtyThumbnails.add(slideId)
       return { slides: newSlides, activeElementId: element.id, dirtyThumbnails }
-    }),
+    })
+    get().pushHistory()
+  },
 
-  removeElement: (slideIndex, elementId) =>
+  removeElement: (slideIndex, elementId) => {
     set((state) => {
       const newSlides = [...state.slides]
       const slideId = newSlides[slideIndex]?.id
@@ -164,7 +256,9 @@ export const usePptxStore = create((set, get) => ({
       const dirtyThumbnails = new Set(state.dirtyThumbnails)
       if (slideId) dirtyThumbnails.add(slideId)
       return { slides: newSlides, activeElementId: null, dirtyThumbnails }
-    }),
+    })
+    get().pushHistory()
+  },
 
   bringToFront: (slideIndex, elementId) =>
     set((state) => {

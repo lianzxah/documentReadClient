@@ -1,11 +1,12 @@
 import React from 'react';
 import { usePptxStore } from '../../store/pptxStore';
-import { Trash2, ArrowUpToLine, ArrowDownToLine, Copy, Plus, Minus } from 'lucide-react';
+import { Trash2, ArrowUpToLine, ArrowDownToLine, Copy, Plus, Minus, Type } from 'lucide-react';
 
 export function Panel() {
   const slides = usePptxStore((s) => s.slides);
   const currentSlideIndex = usePptxStore((s) => s.currentSlideIndex);
   const activeElementId = usePptxStore((s) => s.activeElementId);
+  const editingElementId = usePptxStore((s) => s.editingElementId);
   const updateElement = usePptxStore((s) => s.updateElement);
   const removeElement = usePptxStore((s) => s.removeElement);
   const bringToFront = usePptxStore((s) => s.bringToFront);
@@ -86,11 +87,19 @@ export function Panel() {
         <>
           <div>
             <label className="block text-xs mb-1 text-vs-muted">Content</label>
-            <textarea
-              value={activeElement.content}
-              onChange={(e) => handleChange('content', e.target.value)}
-              className="w-full bg-vs-bg border border-vs-border rounded p-2 text-sm focus:outline-none focus:border-blue-500 min-h-[100px]"
-            />
+            {editingElementId === activeElement.id ? (
+              <div className="flex items-center gap-1.5 p-2 bg-blue-500/10 border border-blue-500/30 rounded text-xs text-blue-300">
+                <Type size={12} />
+                Editing inline on canvas...
+              </div>
+            ) : (
+              <textarea
+                value={activeElement.content}
+                onChange={(e) => handleChange('content', e.target.value)}
+                className="w-full bg-vs-bg border border-vs-border rounded p-2 text-sm focus:outline-none focus:border-blue-500 min-h-[100px]"
+                placeholder="Double-click on canvas to edit inline"
+              />
+            )}
           </div>
           <div>
             <label className="block text-xs mb-1 text-vs-muted">Color</label>

@@ -1,9 +1,10 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { Rnd } from 'react-rnd';
 import { usePptxStore } from '../../store/pptxStore';
 import { TableElement } from './TableElement';
 import { ChartElement } from './ChartElement';
 import { ChartEditor } from './ChartEditor';
+import { InlineTextEditor } from './InlineTextEditor';
 import { SHAPE_PATH_FORMULAS } from './configs/shapes';
 
 // Render SVG shape element
@@ -75,6 +76,9 @@ export function Canvas({ slideIndex }) {
   const activeElementId = usePptxStore((s) => s.activeElementId);
   const setActiveElementId = usePptxStore((s) => s.setActiveElementId);
   const updateElement = usePptxStore((s) => s.updateElement);
+  const editingElementId = usePptxStore((s) => s.editingElementId);
+  const setEditingElementId = usePptxStore((s) => s.setEditingElementId);
+  const pushHistory = usePptxStore((s) => s.pushHistory);
 
   const slide = slides[slideIndex];
   const containerRef = useRef(null);
@@ -103,11 +107,43 @@ export function Canvas({ slideIndex }) {
 
   const bgColor = slide.background?.color || '#ffffff';
 
+  // Handle double-click on text/shape to enter edit mode
+  const handleDoubleClick = (el) => {
+    if (el.type === 'text' || el.type === 'shape') {
+      setEditingElementId(el.id);
+    }
+  };
+
+  // Handle inline text update (for text elements)
+  const handleInlineTextUpdate = (el, newContent) => {
+    updateElement(slideIndex, el.id, { content: newContent });
+  };
+
+  // Handle inline shape text update
+  const handleShapeTextUpdate = (el, newContent) => {
+    updateElement(slideIndex, el.id, { textContent: newContent });
+  };
+
+  // Handle blur from inline editor - exit editing mode and push history
+  const handleInlineBlur = () => {
+    setEditingElementId(null);
+    pushHistory();
+  };
+
+  // Clear editing state when clicking canvas background
+  const handleCanvasMouseDown = () => {
+    if (editingElementId) {
+      setEditingElementId(null);
+      pushHistory();
+    }
+    setActiveElementId(null);
+  };
+
   return (
     <div
       ref={containerRef}
       className="w-full h-full flex items-center justify-center bg-vs-bg overflow-hidden relative"
-      onMouseDown={() => setActiveElementId(null)}
+      onMouseDown={handleCanvasMouseDown}
     >
       {/* Horizontal Ruler */}
       <div className="absolute top-0 left-0 right-0 h-5 bg-vs-sidebar border-b border-vs-border z-20 flex overflow-hidden opacity-80 pointer-events-none">
@@ -152,6 +188,7 @@ export function Canvas({ slideIndex }) {
 
         {slide.elements.map((el) => {
           const isSelected = activeElementId === el.id;
+          const isEditing = editingElementId === el.id;
           return (
             <Rnd
               key={el.id}
@@ -159,6 +196,7 @@ export function Canvas({ slideIndex }) {
               position={{ x: el.left || 0, y: el.top || 0 }}
               onDragStop={(e, d) => {
                 updateElement(slideIndex, el.id, { left: d.x, top: d.y });
+                pushHistory();
               }}
               onResizeStop={(e, direction, ref, delta, position) => {
                 updateElement(slideIndex, el.id, {
@@ -166,9 +204,10 @@ export function Canvas({ slideIndex }) {
                   height: parseInt(ref.style.height, 10),
                   ...position,
                 });
+                pushHistory();
               }}
               scale={scale}
-              className={`absolute cursor-pointer ${isSelected ? 'ring-1 ring-blue-500 z-10' : 'hover:ring-1 hover:ring-blue-300'}`}
+              className={`absolute cursor-pointer ${isSelected ? 'ring-1 ring-blue-500 z-10' : 'hover:ring-1 hover:ring-blue-300'} ${isEditing ? 'ring-2 ring-blue-400 z-20' : ''}`}
               style={{
                 transform: `rotate(${el.rotate || 0}deg)`,
                 opacity: el.opacity !== undefined ? el.opacity : 1,
@@ -183,15 +222,17 @@ export function Canvas({ slideIndex }) {
                 left: { width: '10px', left: '-5px' },
                 right: { width: '10px', right: '-5px' },
               }}
-              enableResizing={isSelected ? undefined : false}
-              disableDragging={!isSelected}
+              enableResizing={isSelected && !isEditing ? undefined : false}
+              disableDragging={!isSelected || isEditing}
               onMouseDown={(e) => {
                 e.stopPropagation();
                 setActiveElementId(el.id);
               }}
+              onDoubleClick={() => handleDoubleClick(el)}
               bounds="parent"
             >
-              {el.type === 'text' && (
+              {/* Text Element */}
+              {el.type === 'text' && !isEditing && (
                 <div
                   style={{
                     color: el.color,
@@ -207,6 +248,21 @@ export function Canvas({ slideIndex }) {
                   {el.content}
                 </div>
               )}
+              {el.type === 'text' && isEditing && (
+                <InlineTextEditor
+                  content={el.content}
+                  onUpdate={(text) => handleInlineTextUpdate(el, text)}
+                  onBlur={handleInlineBlur}
+                  autoFocus
+                  style={{
+                    fontSize: el.fontSize ? `${el.fontSize}px` : undefined,
+                    color: el.color,
+                    fontWeight: el.fontWeight,
+                    textAlign: el.align,
+                  }}
+                />
+              )}
+              {/* Image Element */}
               {el.type === 'image' && (
                 <img
                   src={el.src}
@@ -215,10 +271,47 @@ export function Canvas({ slideIndex }) {
                   draggable={false}
                 />
               )}
-              {el.type === 'shape' && <ShapeRenderer el={el} />}
+              {/* Shape Element */}
+              {el.type === 'shape' && (
+                <div className="w-full h-full relative">
+                  <ShapeRenderer el={el} />
+                  {/* Shape text overlay - show when editing or has content */}
+                  {isEditing && (
+                    <div className="absolute inset-0 flex items-center justify-center p-2">
+                      <InlineTextEditor
+                        content={el.textContent || ''}
+                        onUpdate={(text) => handleShapeTextUpdate(el, text)}
+                        onBlur={handleInlineBlur}
+                        autoFocus
+                        style={{
+                          fontSize: '16px',
+                          color: el.outlined ? (el.outlineColor || '#333') : '#fff',
+                          textAlign: 'center',
+                        }}
+                      />
+                    </div>
+                  )}
+                  {!isEditing && el.textContent && (
+                    <div
+                      className="absolute inset-0 flex items-center justify-center p-2 pointer-events-none"
+                      style={{
+                        fontSize: '16px',
+                        color: el.outlined ? (el.outlineColor || '#333') : '#fff',
+                        textAlign: 'center',
+                        whiteSpace: 'pre-wrap',
+                        wordBreak: 'break-word',
+                      }}
+                    >
+                      {el.textContent}
+                    </div>
+                  )}
+                </div>
+              )}
+              {/* Table Element */}
               {el.type === 'table' && (
                 <TableElement element={el} slideIndex={slideIndex} isSelected={isSelected} />
               )}
+              {/* Chart Element */}
               {el.type === 'chart' && (
                 <ChartElement
                   element={el}

@@ -137,7 +137,7 @@ export function SlidevPanel() {
                     <Pencil size={12} />
                     {!isNarrow && t('slidev.panel.edit')}
                   </button>
-                  {/* PPTX Visual Edit Temporarily Hidden 
+                  {/* PPTX Visual Edit Temporarily Hidden  */}
                   <button
                     onClick={() => setPptxEditMode(!pptxEditMode)}
                     className="flex items-center gap-1 px-2 py-1 text-xs rounded bg-vs-hover hover:bg-vs-border text-vs-foreground"
@@ -146,7 +146,6 @@ export function SlidevPanel() {
                     <Palette size={12} />
                     {!isNarrow && (pptxEditMode ? "Exit Visual" : "Visual Edit")}
                   </button>
-                  */}
                 </>
               ) : (
                 <button
